@@ -13,11 +13,13 @@ struct ContentView: View {
              AssignmentItem(course: "English", description: "Read Of Mice Of Men", dueDate: Date()),
              AssignmentItem(course: "Science", description: "Finish Lab", dueDate: Date())]
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            List {
+                ForEach(assignmentItem) { item in
+                    Text(item.description)
+                }
+            }
+            .navigationTitle("Assignments")
         }
         .padding()
     }
