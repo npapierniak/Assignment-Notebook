@@ -18,8 +18,15 @@ struct ContentView: View {
                 ForEach(assignmentItem) { item in
                     Text(item.description)
                 }
+                .onMove{ indices, newOffset in
+                    assignmentItem.move(fromOffsets: indices, toOffset: newOffset)
+                }
+                .onDelete { indexSet in
+                assignmentItem.remove(atOffsets: indexSet)
+                }
             }
             .navigationTitle("Assignments")
+            .navigationBarItems(leading: EditButton())
         }
         .padding()
     }
