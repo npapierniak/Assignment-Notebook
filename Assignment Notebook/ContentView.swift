@@ -11,37 +11,43 @@ struct ContentView: View {
     @ObservedObject var assignmentItem = AssignmentList()
     @State private var showingAddAssignmentView = false
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(assignmentItem.items) { item in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text (item.course)
-                                .font(.headline)
-                            Text (item.description)
+        ZStack{
+            Image("Notebook")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+            NavigationView {
+                List {
+                    ForEach(assignmentItem.items) { item in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text (item.course)
+                                    .font(.headline)
+                                Text (item.description)
+                            }
+                            Spacer()
+                            Text (item.dueDate, style: .date)
                         }
-                        Spacer()
-                        Text (item.dueDate, style: .date)
+                    }
+                    .onMove{ indices, newOffset in
+                        assignmentItem.items.move(fromOffsets: indices, toOffset: newOffset)
+                    }
+                    .onDelete { indexSet in
+                        assignmentItem.items.remove(atOffsets: indexSet)
                     }
                 }
-                .onMove{ indices, newOffset in
-                    assignmentItem.items.move(fromOffsets: indices, toOffset: newOffset)
-                }
-                .onDelete { indexSet in
-                    assignmentItem.items.remove(atOffsets: indexSet)
-                }
-            }
-            .sheet(isPresented: $showingAddAssignmentView, content: {
-                AddAssignmentView(assignmentItem: assignmentItem)
-            })
-            .navigationTitle("Assignments")
-            .navigationBarItems (leading: EditButton (),
-                                 trailing: Button(action: {
-                showingAddAssignmentView = true}) {
-                    Image (systemName: "plus")
+                .sheet(isPresented: $showingAddAssignmentView, content: {
+                    AddAssignmentView(assignmentItem: assignmentItem)
                 })
+                .navigationTitle("Assignments")
+                .navigationBarItems(leading: EditButton (),trailing: Button(action: { showingAddAssignmentView = true}) {
+                    Image(systemName: "plus")
+                })
+                .foregroundColor(.black)
+            }
+            .padding()
         }
-        .padding()
     }
 }
 
@@ -50,6 +56,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 struct  AssignmentItem: Identifiable, Codable {
     var id = UUID ()
     var course = String()
