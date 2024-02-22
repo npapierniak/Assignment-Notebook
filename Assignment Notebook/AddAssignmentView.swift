@@ -34,6 +34,9 @@ struct AddAssignmentView: View {
                     presentationMode.wrappedValue.dismiss ()
                 }
             })
+            .navigationBarItems(trailing: Button("Cancel") {
+                            presentationMode.wrappedValue.dismiss()
+                        })
         }
     }
 }

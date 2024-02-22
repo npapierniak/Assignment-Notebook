@@ -12,23 +12,24 @@ struct ContentView: View {
     @State private var showingAddAssignmentView = false
     var body: some View {
         ZStack{
-            Image("Notebook")
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
             NavigationView {
                 List {
                     ForEach(assignmentItem.items) { item in
                         HStack {
-                            VStack(alignment: .leading) {
-                                Text (item.course)
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(item.course)
                                     .font(.headline)
-                                Text (item.description)
+                                Text(item.description)
                             }
+                            .padding(8)
+                            .background(Color.white.opacity(0.8))
+                            .cornerRadius(10)
                             Spacer()
-                            Text (item.dueDate, style: .date)
+                            Text(item.dueDate, style: .date)
                         }
+                    }
+                    .onDelete { indexSet in
+                        assignmentItem.items.remove(atOffsets: indexSet)
                     }
                     .onMove{ indices, newOffset in
                         assignmentItem.items.move(fromOffsets: indices, toOffset: newOffset)
